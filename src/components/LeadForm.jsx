@@ -63,7 +63,18 @@ export default function LeadForm() {
             if (!result.success) {
                 throw new Error(result.message || 'Form submission failed');
             }
-
+            const submissionData = {
+                timestamp: new Date().toISOString(),
+                formData: {
+                    name: data.name,
+                    email: data.email,
+                    phone: data.phone
+                },
+                response: result,
+                submitted: true
+            };
+            
+            localStorage.setItem('leadFormSubmission', JSON.stringify(submissionData));
             reset();
             setIsSubmitting(false);
             setTimeout(() => {
