@@ -13,10 +13,10 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">L</span>
+                <span className="text-white font-bold text-lg">D</span>
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                LeadGen Pro
+                Dev LeadGen
               </span>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
