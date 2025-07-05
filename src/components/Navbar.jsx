@@ -10,7 +10,7 @@ function Navbar() {
       <div className="w-full flex justify-between items-center p-4">
         <div className='flex gap-2'>
           <Link href={"/"}> <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">L</span>
+            <span className="text-white font-bold text-lg">D</span>
 
           </div>
           </Link>
