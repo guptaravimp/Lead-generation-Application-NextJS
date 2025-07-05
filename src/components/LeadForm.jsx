@@ -11,12 +11,28 @@ export default function LeadForm() {
         register,
         handleSubmit,
         formState: { errors },
-        reset
+        reset,
+        watch
     } = useForm();
+    
+    // Debug: Watch email field and log errors
+    const emailValue = watch('email');
+    console.log('Email value:', emailValue);
+    console.log('Form errors:', errors);
     useEffect(() => {
         setIsMounted(true);
     }, []);
     const onSubmit = async (data) => {
+        console.log('Form data being submitted:', data);
+        console.log('Current form errors:', errors);
+        
+        // Check if there are any validation errors
+        if (Object.keys(errors).length > 0) {
+            console.log('Form has validation errors, preventing submission');
+            setSubmitError('Please fix the validation errors before submitting');
+            return;
+        }
+        
         setIsSubmitting(true);
         setSubmitError('');
         try {
@@ -28,13 +44,25 @@ export default function LeadForm() {
                 body: JSON.stringify(data),
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to submit form');
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+
+            let result;
+            try {
+                result = await response.json();
+                console.log(' API Response:', result);
+            } catch (jsonError) {
+                console.error('JSON Parse Error:', jsonError);
+                throw new Error('Invalid response from server');
             }
 
-            const result = await response.json();
-            console.log('✅ Form submitted:', result);
+            if (!response.ok) {
+                throw new Error(result.message || `HTTP ${response.status}: Failed to submit form`);
+            }
+
+            if (!result.success) {
+                throw new Error(result.message || 'Form submission failed');
+            }
 
             reset();
             setIsSubmitting(false);
@@ -60,7 +88,8 @@ export default function LeadForm() {
         <div className='w-full '>
             <form onSubmit={handleSubmit(onSubmit)} className='  flex flex-col justify-evenly items-center  gap-1'>
                 <div className=' flex flex-col justify-between items-center gap-3'>
-                      <h3 className="text-4xl font-bold  bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Get Your Free Strategy Call</h3>
+                 
+                    <h3 className="text-4xl font-bold  bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Get Your Free Strategy Call</h3>
                     <p className='text-xl text-gray-400 '>Fill out the form below and we'll get back to you within 24 hours</p>
 
 
@@ -92,14 +121,26 @@ export default function LeadForm() {
                                 {...register('email', {
                                     required: 'Email is required',
                                     pattern: {
-                                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                                         message: 'Please enter a valid email address'
+                                    },
+                                    validate: (value) => {
+                                        if (!value) return 'Email is required';
+                                        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                                        if (!emailRegex.test(value)) {
+                                            return 'Please enter a valid email address';
+                                        }
+                                        return true;
                                     }
                                 })} placeholder='Enter Your Email'
                                 style={{
                                     boxShadow: "inset 0px -2px 10px rgba(255, 255, 255, 0.18)",
                                 }} className='h-10 w-full bottom-1 rounded bg-[#2C333F] p-[12px] text-[#F1F2FF]' />
-                            {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
+                            {errors.email && (
+                                <span className="text-red-500 text-sm font-semibold bg-red-100 p-2 rounded border border-red-300">
+                                     {errors.email.message}
+                                </span>
+                            )}
                         </label>
 
                     </div>
@@ -141,6 +182,11 @@ export default function LeadForm() {
                         'Get Started - Book Free Call!'
                     )}
                 </button>
+                {submitError && (
+                    <div className="w-full mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                        <strong>Error:</strong> {submitError}
+                    </div>
+                )}
                 <p className="text-xs text-gray-400 mt-4 text-center">
                     By submitting this form, you agree to receive marketing communications from us.
                 </p>
