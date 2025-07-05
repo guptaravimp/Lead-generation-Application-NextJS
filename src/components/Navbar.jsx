@@ -15,7 +15,7 @@ function Navbar() {
           </div>
           </Link>
          
-          <h1 className="text-2xl font-bold text-blue-600">LeadGen Pro</h1>
+          <h1 className="text-2xl font-bold text-blue-600">Dev LeadGen </h1>
         </div>
 
 
