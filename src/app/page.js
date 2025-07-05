@@ -40,7 +40,7 @@ export default function Home() {
         <div className="w-[85%]  hero   flex justify-between">
           <div className="w-[46%] first bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-8 rounded-2xl shadow-xl">
             <div className={`transition-all duration-1000 delay-300 `}>
-              <h3 className="text-3xl font-bold mb-8 text-white">What You'll Get:</h3>
+              <h3 className="text-3xl font-bold mb-8 text-white">What Youll Get: </h3>
               <div className="space-y-6">
                 {[
                   {
